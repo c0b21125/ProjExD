@@ -1,6 +1,5 @@
 from ast import Num
 import random
-import datetime
 import time
 
 # グローバル変数
