@@ -1,6 +1,7 @@
 from ast import Num
 import random
 import datetime
+import time
 
 # グローバル変数
 all_alphabet = 26 #全アルファベット数
@@ -9,6 +10,7 @@ kesson_num = 2
 challenge = 2
 
 def shutudai(alphabet):
+
     taisyo_chars = random.sample(alphabet, taisyo_num)
     print("対象文字", end = "")
 
@@ -29,7 +31,10 @@ def shutudai(alphabet):
     return kesson_char
 
 def kaito(ans):
+
     num = int(input("欠損文字はいくつありますか？"))
+
+    time_sta = time.time()
 
     if num == kesson_num:
         print("正解です。それでは、具体的に欠損文字を1つずつ入力してください")
@@ -45,6 +50,10 @@ def kaito(ans):
 
         else:
             print("欠損文字も含めて完全正解です！")
+            time_end = time.time()
+            tim = time_end - time_sta
+
+            print(tim)
             return True
 
     else:
