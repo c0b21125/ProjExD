@@ -16,8 +16,14 @@ def equal_click(event):
     entry.insert(tk.END, res)
 
 # オールクリア
-def clear_click(event):
+def allclear_click(event):
     entry.delete(0, tk.END)
+
+# クリア
+def clear_click(event):
+    n = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(0, n[:-1])
 
 # %で表示
 def percent_click(event):
@@ -60,8 +66,13 @@ btn.grid(row=r, column=c)
 
 # オールクリアボタンの追加
 btn = tk.Button(root, text=f"AC", font=("Times New Roman", 30), width = 4, height = 2, bg="red")
-btn.bind("<1>", clear_click)
+btn.bind("<1>", allclear_click)
 btn.grid(row=r, column=c+1)
+
+# クリア
+btn = tk.Button(root, text=f"C", font=("Times New Roman", 30), width = 4, height = 2, bg="red")
+btn.bind("<1>", clear_click)
+btn.grid(row=r+1, column=c+1)
 
 # %表示の追加
 btn = tk.Button(root, text=f"%", font=("Times New Roman", 30), width = 4, height = 2, bg="white")
