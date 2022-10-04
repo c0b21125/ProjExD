@@ -5,7 +5,6 @@ import math
 def num_click(event):
     btn = event.widget
     num = btn["text"]
-    #tkm.showinfo(num, f"{num}のボタンが押されました")
     entry.insert(tk.END, num)
 
 # イコールボタン  
