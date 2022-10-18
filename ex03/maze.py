@@ -4,7 +4,12 @@ import tkinter.messagebox as tkm
 def key_down(event):
     global key
     key = event.keysym
-    
+
+
+def key_up(event):
+    global key
+    key = ""
+
 
 if __name__ == "__main__":
     root = tk.Tk() # 練習１
@@ -24,5 +29,7 @@ if __name__ == "__main__":
 
     # 練習５
     root.bind("<KeyPress>", key_down)
+    # 練習６
+    root.bind("<KeyRelease>", key_up)
 
     root.mainloop()
