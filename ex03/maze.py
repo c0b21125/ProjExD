@@ -1,3 +1,4 @@
+from http.client import TOO_MANY_REQUESTS
 import tkinter as tk
 import tkinter.messagebox as tkm
 import maze_maker as mm # 練習８
@@ -77,8 +78,10 @@ if __name__ == "__main__":
     mm.show_maze(canvas, maze_lst)
     canvas.create_rectangle(100, 100, 200, 200, 
                                     fill="blue") # start
+    canvas.create_text(150, 150, text="start", font=("", 25), fill="white")
     canvas.create_rectangle(1300, 500, 1400, 600, 
-                                    fill="red") # gole
+                                    fill="red") # goal
+    canvas.create_text(1350, 550, text="goal", font=("", 25), fill="white")
 
     # 練習３ こうかとん表示
     tori = tk.PhotoImage(file="fig/0.png")
