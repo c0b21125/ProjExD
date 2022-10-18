@@ -84,9 +84,6 @@ if __name__ == "__main__":
                                     fill="blue") # start
     canvas.create_rectangle(1300, 500, 1400, 600, 
                                     fill="red") # gole
-
-    # 練習３ こうかとん表示
-    tori = tk.PhotoImage(file="fig/0.png")
     #tori_lst = glob.glob("C:/Users/admin/Documents/ProjExD2022/fig/*.png") # ランダムにこうかとんの画像抽出
     #tori_data = random.choice(tori_lst)
     #tori_file = os.path.split(tori_data)[1]
