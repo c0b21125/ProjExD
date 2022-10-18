@@ -38,6 +38,13 @@ def main_proc():
     cx, cy = mx*100+50, my*100+50 # 1マス100x100
     canvas.coords("tori", cx, cy)
 
+    # 通った道に色付け
+    #if maze_lst[my][mx] == 0:
+    #    maze_lst[my][mx] = 2
+    #    canvas.create_rectangle(cx-50, cy-50,cx+50, cy+50, fill="pink", width=0)
+    #canvas.delete("tori")
+    #canvas.create_image(cx, cy, image=tori, tag="tori")
+
     # ゴール確認
     if maze_lst[my][mx] == 0 and cx==1350 and cy==550:
         canvas.update()
@@ -45,19 +52,6 @@ def main_proc():
     
     else:
         root.after(100, main_proc) # そうでなければこの関数を実行
-    
-    #cx, cy = mx*100+50, my*100+50 # 1マス100x100
-
-    # 通った道に色付け
-    #if maze_lst[my][mx] == 0:
-    #    maze_lst[my][mx] = 2
-    #    canvas.create_rectangle(cx, cy, fill="pink", width=0)
-    #canvas.delete("tori")
-    #canvas.create_image(cx, cy, image=tori, tag="tori")
-
-    #cx, cy = mx*100+50, my*100+50 # 1マス100x100
-    #canvas.coords("tori", cx, cy)
-    #root.after(100, main_proc)
 
 
 if __name__ == "__main__":
