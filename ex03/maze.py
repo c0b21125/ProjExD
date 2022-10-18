@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.messagebox as tkm
+import maze_maker as mm # 練習８
 
 def key_down(event):
     global key
@@ -24,6 +25,7 @@ def main_proc():
     canvas.coords("tori", cx, cy)
     root.after(100, main_proc)
 
+
 if __name__ == "__main__":
     root = tk.Tk() # 練習１
     root.title("迷えるこうかとん")
@@ -47,5 +49,9 @@ if __name__ == "__main__":
 
     # 練習７
     main_proc()
+
+    # 練習９，１０
+    maze_lst = mm.make_maze(15, 9)
+    mm.show_maze(canvas, maze_lst)
 
     root.mainloop()
