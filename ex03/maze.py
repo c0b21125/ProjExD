@@ -77,13 +77,15 @@ if __name__ == "__main__":
     # 練習９，１０
     maze_lst = mm.make_maze(15, 9)
     mm.show_maze(canvas, maze_lst)
+    canvas.create_rectangle(100, 100, 200, 200, 
+                                    fill="blue") # start
+    canvas.create_text(150, 150, text="start", font=("", 25), fill="white")
+    canvas.create_rectangle(1300, 500, 1400, 600, 
+                                    fill="red") # goal
+    canvas.create_text(1350, 550, text="goal", font=("", 25), fill="white")
 
     # 練習３ こうかとん表示
     tori = tk.PhotoImage(file="fig/0.png")
-    canvas.create_rectangle(100, 100, 200, 200, 
-                                    fill="blue") # start
-    canvas.create_rectangle(1300, 500, 1400, 600, 
-                                    fill="red") # gole
     #tori_lst = glob.glob("C:/Users/admin/Documents/ProjExD2022/fig/*.png") # ランダムにこうかとんの画像抽出
     #tori_data = random.choice(tori_lst)
     #tori_file = os.path.split(tori_data)[1]
