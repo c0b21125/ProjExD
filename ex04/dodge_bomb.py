@@ -25,6 +25,17 @@ def main():
 
         scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
 
+        # 練習４
+        key_states = pg.key.get_pressed()
+        if key_states[pg.K_UP]: # こうかとんの縦座標を-1
+            tori_rct.centery -= 1
+        if key_states[pg.K_DOWN]: # 縦座標を+1
+            tori_rct.centery += 1
+        if key_states[pg.K_LEFT]: # 横座標を-1
+            tori_rct.centerx -= 1
+        if key_states[pg.K_RIGHT]: # 横座標を+1
+            tori_rct.centerx += 1
+
         pg.display.update()
         clock.tick(1000)
 
