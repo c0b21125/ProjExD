@@ -15,11 +15,6 @@ def check_bound(obj_rct, scr_rct):
         tate = -1
     return yoko, tate
 
-def gameover(): # ゲームオーバーの表示
-    font = pg.font.Font(None, 80)
-    text = font.render("gameover", True, RED)
-    scrn_sfc.blit(text, (300, 200))
-
 
 def main():
     global scrn_sfc
@@ -47,7 +42,11 @@ def main():
     # 爆弾の追加
     bomb2_sfc = pg.Surface((20, 20)) # 空のsurface
     bomb2_sfc.set_colorkey((0, 0, 0)) # 四隅の黒い部分を透明にする
-    pg.draw.circle(bomb2_sfc, (0, 0, 255), (10, 10), 10) # 円を描画
+    # 爆弾の色をランダムにする
+    red = randint(0, 255)
+    green = randint(0, 255)
+    blue = randint(0, 255)
+    pg.draw.circle(bomb2_sfc, (red, green, blue), (10, 10), 10) # 円を描画
     bomb2_rct = bomb2_sfc.get_rect()
     bomb2_rct.centerx = randint(0, scrn_rct.width)
     bomb2_rct.centery = randint(0, scrn_rct.height)
@@ -66,8 +65,7 @@ def main():
 
     clock = pg.time.Clock() # 練習１
 
-    running = True
-    while running:
+    while True:
         scrn_sfc.blit(bg_sfc, bg_rct) # 練習２
 
         for event in pg.event.get(): # イベントを繰り返しで処理
@@ -80,6 +78,15 @@ def main():
                     scrn_sfc = pg.display.set_mode(1600, 900)
                 if event.key == pg.K_ESCAPE: # Escキーが押されたら閉じる
                     return
+                if event.key == pg.K_SPACE: # スペースキーが押されたら爆弾を止める
+                    vx, vy = 0, 0
+                    vx2, vy2 = 0, 0
+                if event.key == pg.K_s:
+                    vx *= 1.1
+                    vy *= 1.1
+
+                    vx2 *= 1.1
+                    vy2 *= 1.1
 
         if flag == 0:
             scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
@@ -94,6 +101,7 @@ def main():
             tori_rct.centerx -= 1
         if key_states[pg.K_RIGHT]: # 横座標を+1
             tori_rct.centerx += 1
+
         yoko, tate = check_bound(tori_rct, scrn_rct)
         if yoko == -1:
             if key_states[pg.K_LEFT]:
@@ -107,14 +115,14 @@ def main():
             if key_states[pg.K_DOWN]:
                 tori_rct.centery -= 1
 
-        #scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
-
+        # 爆弾１
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
         vy *= tate
         bomb_rct.move_ip(vx, vy) # 練習６
         scrn_sfc.blit(bomb_sfc, bomb_rct) # 練習５
 
+        # 爆弾２
         yoko, tate = check_bound(bomb2_rct, scrn_rct)
         vx2 *= yoko
         vy2 *= tate
@@ -125,19 +133,19 @@ def main():
         if tori_rct.colliderect(bomb_rct): # こうかとんrctが爆弾rctと重なったら
             flag += 1
             tori_rct = yakitori_rct
-            #return
         
         if tori_rct.colliderect(bomb2_rct):
             flag += 1
             tori_rct = yakitori_rct
-            #return
 
         if flag == 1: # flag=1（一回当たった）の時こうかとんが焼き鳥になる
             scrn_sfc.blit(yakitori_sfc, yakitori_rct)
 
         if flag == 2: # 2回当たったら終了
-            running = False
-            gameover()
+            bg_sfc = pg.image.load("fig/gameover.png") # gameoverの画像
+            bg_rct = bg_sfc.get_rect()
+            bg_rct.center = 900, 400
+
 
         pg.display.update()
         clock.tick(1000)
