@@ -8,16 +8,24 @@ def main():
     bg_sfc = pg.image.load("fig/pg_bg.jpg") # surface
     bg_rct = bg_sfc.get_rect() # Rect
 
+    # 練習３
+    tori_sfc = pg.image.load("fig/6.png")
+    tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
+    tori_rct = tori_sfc.get_rect() # Rect
+    tori_rct.center = 900, 400 # 横：900, 縦：400の座標
+
     clock = pg.time.Clock() # 練習１
 
     while True:
         scrn_sfc.blit(bg_sfc, bg_rct) # 練習２
-        pg.display.update() # 野原貼り付け
 
         for event in pg.event.get(): # イベントを繰り返しで処理
             if event.type == pg.QUIT: # ウィンドウの×ボタンをクリックしたら閉じる
                 return
 
+        scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
+
+        pg.display.update()
         clock.tick(1000)
 
 
