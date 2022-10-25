@@ -81,6 +81,10 @@ def main():
         bomb_rct.move_ip(vx, vy) # 練習６
         scrn_sfc.blit(bomb_sfc, bomb_rct) # 練習５
 
+        # 練習８
+        if tori_rct.colliderect(bomb_rct): # こうかとんrctが爆弾rctと重なったら
+            return
+
         pg.display.update()
         clock.tick(1000)
 
