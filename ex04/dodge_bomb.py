@@ -138,7 +138,6 @@ def main():
         if flag == 2: # 2回当たったら終了
             running = False
             gameover()
-            return
 
         pg.display.update()
         clock.tick(1000)
