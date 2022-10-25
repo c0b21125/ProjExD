@@ -15,8 +15,14 @@ def check_bound(obj_rct, scr_rct):
         tate = -1
     return yoko, tate
 
+def gameover(): # ゲームオーバーの表示
+    font = pg.font.Font(None, 80)
+    text = font.render("gameover", True, RED)
+    scrn_sfc.blit(text, (300, 200))
+
 
 def main():
+    global scrn_sfc
     pg.display.set_caption("逃げろ！こうかとん") # 練習１
     scrn_sfc = pg.display.set_mode((1600, 900))
     scrn_rct = scrn_sfc.get_rect()
@@ -38,17 +44,45 @@ def main():
     bomb_rct.centerx = randint(0, scrn_rct.width)
     bomb_rct.centery = randint(0, scrn_rct.height)
 
+    # 爆弾の追加
+    bomb2_sfc = pg.Surface((20, 20)) # 空のsurface
+    bomb2_sfc.set_colorkey((0, 0, 0)) # 四隅の黒い部分を透明にする
+    pg.draw.circle(bomb2_sfc, (0, 0, 255), (10, 10), 10) # 円を描画
+    bomb2_rct = bomb2_sfc.get_rect()
+    bomb2_rct.centerx = randint(0, scrn_rct.width)
+    bomb2_rct.centery = randint(0, scrn_rct.height)
+
+    # 焼き鳥
+    yakitori_sfc = pg.image.load("fig/food_yakitori01_01.png")
+    yakitori_sfc = pg.transform.rotozoom(yakitori_sfc, 0, 0.2)
+    yakitori_rct = yakitori_sfc.get_rect()
+    yakitori_rct.center = tori_rct.centerx, tori_rct.centery
+
+
     # 練習６
     vx, vy = +1, +1
+    vx2, vy2 = +2, +2
+    flag = 0 # こうかとんと爆弾の当たり判定
 
     clock = pg.time.Clock() # 練習１
 
-    while True:
+    running = True
+    while running:
         scrn_sfc.blit(bg_sfc, bg_rct) # 練習２
 
         for event in pg.event.get(): # イベントを繰り返しで処理
             if event.type == pg.QUIT: # ウィンドウの×ボタンをクリックしたら閉じる
                 return
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_F1: # F1キーが押されたらフルスクリーンモードに
+                    scrn_sfc = pg.display.set_mode((1600, 900), pg.FULLSCREEN)
+                if event.key == pg.K_F2: # F2キーが押されたら元のサイズに戻す
+                    scrn_sfc = pg.display.set_mode(1600, 900)
+                if event.key == pg.K_ESCAPE: # Escキーが押されたら閉じる
+                    return
+
+        if flag == 0:
+            scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
 
         # 練習４
         key_states = pg.key.get_pressed()
@@ -73,7 +107,7 @@ def main():
             if key_states[pg.K_DOWN]:
                 tori_rct.centery -= 1
 
-        scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
+        #scrn_sfc.blit(tori_sfc, tori_rct) # 練習３
 
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
@@ -81,8 +115,29 @@ def main():
         bomb_rct.move_ip(vx, vy) # 練習６
         scrn_sfc.blit(bomb_sfc, bomb_rct) # 練習５
 
+        yoko, tate = check_bound(bomb2_rct, scrn_rct)
+        vx2 *= yoko
+        vy2 *= tate
+        bomb2_rct.move_ip(vx2, vy2)
+        scrn_sfc.blit(bomb2_sfc, bomb2_rct)
+
         # 練習８
         if tori_rct.colliderect(bomb_rct): # こうかとんrctが爆弾rctと重なったら
+            flag += 1
+            tori_rct = yakitori_rct
+            #return
+        
+        if tori_rct.colliderect(bomb2_rct):
+            flag += 1
+            tori_rct = yakitori_rct
+            #return
+
+        if flag == 1: # flag=1（一回当たった）の時こうかとんが焼き鳥になる
+            scrn_sfc.blit(yakitori_sfc, yakitori_rct)
+
+        if flag == 2: # 2回当たったら終了
+            running = False
+            gameover()
             return
 
         pg.display.update()
