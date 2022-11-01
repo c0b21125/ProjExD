@@ -2,7 +2,6 @@ import pygame as pg
 from pygame.locals import *
 import sys
 import random
-import os
 
 class Screen:
     def __init__(self, title, wh, bgimg):
@@ -25,12 +24,12 @@ class Bird:
         pg.K_RIGHT: [+1, 0],
     }
 
-    def __init__(self, img, zoom, xy):
+    def __init__(self, img, zoom, xy, enemy):
         sfc = pg.image.load(img) # "fig/6.png"
         self.sfc = pg.transform.rotozoom(sfc, 0, zoom) # tori_sfc, 0, 2.0
         self.rct = sfc.get_rect()
         self.rct.center = xy #900, 400
-        #self.enemy = enemy # 衝突判定用
+        self.enemy = enemy # 敵との衝突判定用
         self.tori_x = 1 # こうかとんの向き（左右）
 
     def blit(self, scr:Screen): #scrがScreenクラスであることを明記
@@ -81,13 +80,14 @@ class Bomb:
 
 # 敵キャラクラス
 class Enemy(pg.sprite.Sprite):
-    def __init__(self, img, zoom, vxy, scr:Screen):
+    def __init__(self, img, zoom, vxy, scr:Screen, shots):
         sfc = pg.image.load(img) # enemy_img
         self.sfc = pg.transform.rotozoom(sfc, 0, zoom)
         self.rct = sfc.get_rect()
         self.rct.centerx = random.randint(0, scr.rct.width)
         self.rct.centery = random.randint(0, scr.rct.height)
         self.vx, self.vy = vxy
+        self.shots = shots # 衝突判定用
 
     def blit(self, scr:Screen):
         scr.sfc.blit(self.sfc, self.rct)
@@ -155,7 +155,7 @@ def main():
     scr = Screen("負けるな！こうかとん", (1600, 900), "fig/pg_bg.jpg")
 
     # 練習３ こうかとんの初期設定
-    tori = Bird("fig/6.png", 2.0, (900, 400))
+    tori = Bird("fig/6.png", 2.0, (900, 400), ene)
     #yakitori = Bird("fig/food_yakitori01_01.png", 0.2, (900, 400))
 
     # 練習5 爆弾の初期配置    
