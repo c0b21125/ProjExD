@@ -80,14 +80,14 @@ class Bomb:
 
 # 敵キャラクラス
 class Enemy(pg.sprite.Sprite):
-    def __init__(self, img, zoom, vxy, scr:Screen, shots):
+    def __init__(self, img, zoom, vxy, scr:Screen):
         sfc = pg.image.load(img) # enemy_img
         self.sfc = pg.transform.rotozoom(sfc, 0, zoom)
         self.rct = sfc.get_rect()
         self.rct.centerx = random.randint(0, scr.rct.width)
         self.rct.centery = random.randint(0, scr.rct.height)
         self.vx, self.vy = vxy
-        self.shots = shots # 衝突判定用
+
 
     def blit(self, scr:Screen):
         scr.sfc.blit(self.sfc, self.rct)
@@ -98,15 +98,7 @@ class Enemy(pg.sprite.Sprite):
         self.vx *= yoko
         self.vy *= tate
         self.blit(scr)
-        self.collision()
-
-    def collision(self):
-        # ミサイルとの衝突判定
-        for shot in self.shots:
-            collide = self.rct.colliderect(shot.rct)
-            if collide: # 衝突するミサイルあり
-                self.kill()
-
+        
 
 # こうかとんから発射されるビーム
 class Shot(pg.sprite.Sprite):
@@ -115,7 +107,7 @@ class Shot(pg.sprite.Sprite):
         self.sfc = pg.image.load(img)
         self.rct = self.sfc.get_rect()
         self.rct.center = pos # 中心座標をposに設定
-        self.player_x = tori_x # こうかとんの左右の向きを判定
+        self.tori_x = tori_x # こうかとんの左右の向きを判定
         self.enemy = enemy # 衝突判定用
         self.speed = 10 # ミサイルの移動速度
 
@@ -129,10 +121,9 @@ class Shot(pg.sprite.Sprite):
             self.rct.move_ip(-self.speed, 0) # 左に発射
 
         # 敵とミサイルの衝突判定
-        for enemy in self.enemy:
-            collide = self.rct.colliderect(enemy.rct)
-            if collide: # 敵と衝突した
-                self.kill()
+        collide = self.rct.colliderect(self.enemy.rct)
+        if collide: # 敵と衝突した
+            self.kill()
         
 
 def check_bound(obj_rct, scr_rct):
@@ -154,9 +145,14 @@ def main():
     # 練習１
     scr = Screen("負けるな！こうかとん", (1600, 900), "fig/pg_bg.jpg")
 
+    # Enemyの初期配置
+    ene = Enemy("fig/alien1.png", 2.0, (+1, +1), scr)
+
     # 練習３ こうかとんの初期設定
     tori = Bird("fig/6.png", 2.0, (900, 400), ene)
     #yakitori = Bird("fig/food_yakitori01_01.png", 0.2, (900, 400))
+
+    beam = Shot("fig/shot.gif", tori.rct.center, tori.tori_x, ene)
 
     # 練習5 爆弾の初期配置    
     bkd1 = Bomb((255, 0, 0), 10, (+1, +1), scr)
@@ -165,12 +161,6 @@ def main():
     g = random.randint(0, 255)
     b = random.randint(0, 255)
     bkd2 = Bomb((r, g, b), 10, (+1.5, +1.5), scr)
-
-    # Enemyの初期配置
-    ene = Enemy("fig/alien1.png", 2.0, (+1, +1), scr)
-
-    # Shot
-    beam = Shot("fig/shot.gif", tori.rct, Bird.tori_x, ene)
 
     clock = pg.time.Clock() # 練習1
     while True:
@@ -199,7 +189,7 @@ def main():
         ene.update(scr)
 
         # Shot
-        beam.update(scr)
+        beam.update(scr, ene)
 
         # 練習8
         if tori.rct.colliderect(bkd1.rct): # こうかとんrctが爆弾rctと重なったら
