@@ -167,10 +167,10 @@ def main():
     bkd2 = Bomb((r, g, b), 10, (+1.5, +1.5), scr)
 
     # Enemyの初期配置
-    ene = Enemy("ex05/data/alien1.png", 2.0, (+1, +1), scr)
+    ene = Enemy("fig/alien1.png", 2.0, (+1, +1), scr)
 
     # Shot
-    beam = Shot("ex05/data/shot.gif", tori.rct, Bird.tori_x, ene)
+    beam = Shot("fig/shot.gif", tori.rct, Bird.tori_x, ene)
 
     clock = pg.time.Clock() # 練習1
     while True:
@@ -197,6 +197,9 @@ def main():
 
         # Enemy
         ene.update(scr)
+
+        # Shot
+        beam.update(scr)
 
         # 練習8
         if tori.rct.colliderect(bkd1.rct): # こうかとんrctが爆弾rctと重なったら
