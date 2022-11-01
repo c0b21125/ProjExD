@@ -30,8 +30,8 @@ class Bird:
         self.sfc = pg.transform.rotozoom(sfc, 0, zoom) # tori_sfc, 0, 2.0
         self.rct = sfc.get_rect()
         self.rct.center = xy #900, 400
-        # こうかとんの向き（左右）
-        self.tori_x = 1
+        #self.enemy = enemy # 衝突判定用
+        self.tori_x = 1 # こうかとんの向き（左右）
 
     def blit(self, scr:Screen): #scrがScreenクラスであることを明記
         scr.sfc.blit(self.sfc, self.rct)
@@ -46,6 +46,15 @@ class Bird:
                 if check_bound(self.rct, scr.rct) != (+1, +1):
                     self.rct.centerx -= delta[0]
                     self.rct.centery -= delta[1]
+
+            if key_states[K_RIGHT]:
+                self.tori_x = 1
+            elif key_states[K_LEFT]:
+                self.tori_x = 0
+        
+        # ミサイルの発射
+        if key_states[K_SPACE]:
+            Shot(self.rct.center, self.tori_x, self.enemy)
         
         self.blit(scr) # scr.sfc.blit(self.sfc, self.rct)
 
@@ -102,7 +111,7 @@ class Enemy(pg.sprite.Sprite):
 # こうかとんから発射されるビーム
 class Shot(pg.sprite.Sprite):
     def __init__(self, img, pos, tori_x, enemy):
-        pg.sprite.Sprite.__init__(self, self.containers)
+        #pg.sprite.Sprite.__init__(self, self.containers)
         self.sfc = pg.image.load(img)
         self.rct = self.sfc.get_rect()
         self.rct.center = pos # 中心座標をposに設定
@@ -141,13 +150,13 @@ def check_bound(obj_rct, scr_rct):
 
 
 def main():
-    flag = 0 # 当たり判定
+    #flag = 0 # 当たり判定
     # 練習１
     scr = Screen("負けるな！こうかとん", (1600, 900), "fig/pg_bg.jpg")
 
     # 練習３ こうかとんの初期設定
     tori = Bird("fig/6.png", 2.0, (900, 400))
-    yakitori = Bird("fig/food_yakitori01_01.png", 0.2, (900, 400))
+    #yakitori = Bird("fig/food_yakitori01_01.png", 0.2, (900, 400))
 
     # 練習5 爆弾の初期配置    
     bkd1 = Bomb((255, 0, 0), 10, (+1, +1), scr)
@@ -157,6 +166,11 @@ def main():
     b = random.randint(0, 255)
     bkd2 = Bomb((r, g, b), 10, (+1.5, +1.5), scr)
 
+    # Enemyの初期配置
+    ene = Enemy("ex05/data/alien1.png", 2.0, (+1, +1), scr)
+
+    # Shot
+    beam = Shot("ex05/data/shot.gif", tori.rct, Bird.tori_x, ene)
 
     clock = pg.time.Clock() # 練習1
     while True:
@@ -174,27 +188,30 @@ def main():
                     return
 
         # 爆弾に一度も当たっていないときはこうかとんを表示
-        if flag == 0:
-            tori.update(scr)
+        #if flag == 0:
+        tori.update(scr)
 
         # 練習7
         bkd1.update(scr)
         bkd2.update(scr)
 
+        # Enemy
+        ene.update(scr)
+
         # 練習8
         if tori.rct.colliderect(bkd1.rct): # こうかとんrctが爆弾rctと重なったら
-            flag += 1
-            #return
+            #flag += 1
+            return
         if tori.rct.colliderect(bkd2.rct): # こうかとんrctが爆弾rctと重なったら
-            flag += 1
-            #return
+            #flag += 1
+            return
 
         # 爆弾に一度当たったらこうかとん→焼き鳥に変更
-        if flag == 1:
-            yakitori.update(scr)
+        #if flag == 1:
+            #yakitori.update(scr)
 
-        if flag == 2:
-            return
+        #if flag == 2:
+            #return
 
         pg.display.update() #練習2
         clock.tick(1000)
